@@ -1,4 +1,21 @@
 import wx
+import numpy as np
+import cv2
+from datetime import datetime
+
+def capture():
+    cap = cv2.VideoCapture(0)
+    ret, frame = cap.read()
+
+    # Display the resulting frame
+    cv2.imshow('frame', frame)
+    cv2.imwrite('trap_{}.png'.format(datetime.now().strftime("%Y%m%s_%H%M%S")), frame)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+# When everything done, release the capture
+cap.release()
+cv2.destroyAllWindows()
 
 
 class Frame(wx.Frame):
