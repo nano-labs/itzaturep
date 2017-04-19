@@ -1,26 +1,19 @@
 import wx
-import numpy as np
-import cv2
 from datetime import datetime
+from subprocess import call
+from random import randint, choice
 
 def capture():
-    cap = cv2.VideoCapture(0)
-    ret, frame = cap.read()
-
-    # Display the resulting frame
-    cv2.imshow('frame', frame)
-    cv2.imwrite('trap_{}.png'.format(datetime.now().strftime("%Y%m%s_%H%M%S")), frame)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
-# When everything done, release the capture
-cap.release()
-cv2.destroyAllWindows()
-
-
+    call(["streamer",
+          "-f",
+          "jpeg",
+          "-o",
+          "{}/trap_{}.jpeg".format("trapped",
+                                   datetime.now().strftime("%Y%m%d_%H%M%S"))])
+ 
 class Frame(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title="Hello World", size=(300,200))
+        wx.Frame.__init__(self, None, title="Google Chrome - Gmail", size=(300,200))
 
 class PhotoCtrl(wx.App):
     def __init__(self, redirect=False, filename=None):
@@ -37,9 +30,12 @@ class PhotoCtrl(wx.App):
 
     def onClick(self, event):
         print("click")
-        img = wx.Image("trap.jpg", wx.BITMAP_TYPE_ANY)
+        capture()
+        images = ["trap1.jpg", "trap2.jpeg", "trap3.png", "trap4.jpg"]
+        img = wx.Image(choice(images), wx.BITMAP_TYPE_ANY)
+        pos = (randint(0, 1300), randint(0, 800))
         self.imageCtrl = wx.StaticBitmap(self.panel, wx.ID_ANY, 
-                                         wx.BitmapFromImage(img), (200, 200))
+                                         wx.BitmapFromImage(img), pos)
         self.panel.Refresh()
         # self.panel.BackgroundColour = wx.GREEN
 
